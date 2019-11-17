@@ -17,7 +17,7 @@ app.layout = html.Div(id="page", children=[
     html.Header(
         children=[html.Div([
             html.H2("Syntax Statistics"),
-            html.P(id="text-usage", children="dashboard for conll format") 
+            html.P(id="text-usage", children="dashboard for conll format")
             ]) ]),
     # BODY ====================================================================
     html.Div(id="body", children=[
@@ -40,10 +40,10 @@ app.layout = html.Div(id="page", children=[
                                 'weigth':'100%'
                                     }) ]),
                     html.Label('Select size'),
-                    dcc.Slider(
+                    dcc.Slider(id="size-file",
                         min=0,
                         max=4,
-                        marks={0:"0%", 1:"25%", 2:"50%", 3:'75%', 4:'100%'},
+                        marks={0:"0", 1:"0.25", 2:"0.50", 3:'0.75', 4:'1'},
                         value=4) ]) ]),
             # STATS GENERAL CADRE =============================================
             html.Div(className="cadre-left", children=[
@@ -57,7 +57,7 @@ app.layout = html.Div(id="page", children=[
         html.Div([
             html.Div(className="mid-frame", children=[
                 # FIRST HORIZONTAL FRAME ======================================
-                html.Div(className="large-hor-frame", children=[ 
+                html.Div(className="large-hor-frame", children=[
                     html.Div(className="small-frame", children=[
                         html.Div(className="basic-cadre", children=[
                             html.Div(html.H4("Tokens")),
@@ -70,6 +70,7 @@ app.layout = html.Div(id="page", children=[
                         html.Div(className="basic-cadre",children=[
                             html.Div(html.H4("Sentences")),
                             html.Div(className="number-cadre", id="nb_sentence") ]) ]) ]),
+                    
 
                 # GRAPH ZONE ==================================================
                 html.Div(className="graph-frame", children=[
@@ -87,19 +88,23 @@ app.layout = html.Div(id="page", children=[
                                     id='dep-graph',
                                     figure={} ) ]) ]) ]) ]) ]) ]) ]) ])
 
-    
+
 @app.callback(
     [Output('token_total', 'children'),
      Output('token_unique', 'children'),
      Output('nb_sentence', 'children'),
      Output('pos-graph', 'figure'),
      Output('dep-graph', 'figure')],
-    [Input('upload-data', 'contents')])
-def update_data(content):
+    [Input('upload-data', 'contents'),
+    Input('size-file', 'marks'),
+    Input('size-file', 'value')])
+def update_data(content, marks, value):
     if not content:
         return ["-", "-", "-", {}, {}]
     decoded = database.load(content)
-    dataset = database.create(decoded)
+    size_file = float(marks[str(value)])
+    dataset = database.create(decoded,size_file)
+    
     g_stats, pos_stats, dep_stats = database.stats(dataset)
     pos_graph = bar_graph(pos_stats, 'rgba(50, 171, 96, 0.6)')
     dep_graph = bar_graph(dep_stats, '#95addd')
@@ -107,7 +112,7 @@ def update_data(content):
     diversity_token = g_stats["diversity"]
     total_sentence = g_stats["sentence"]
     return total_token, diversity_token, total_sentence, pos_graph, dep_graph
-                                                
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

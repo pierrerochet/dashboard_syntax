@@ -18,7 +18,7 @@ def bar_graph(data, bar_color):
                             'line':{
                                 'color':'rgba(50, 171, 96, 1.0)',
                                 'width':'1'},
-                        },
+                        },  
                     'orientation':'v'}
                 ],
                 'layout': {
