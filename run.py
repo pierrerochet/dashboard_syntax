@@ -42,9 +42,10 @@ app.layout = html.Div(id="page", children=[
                     html.Label('Select size'),
                     dcc.Slider(id="size-file",
                         min=0,
-                        max=4,
-                        marks={0:"0", 1:"0.25", 2:"0.50", 3:'0.75', 4:'1'},
-                        value=4) ]) ]),
+                        max=1,
+                        step=0.25,
+                        marks={0:"0", 0.25:"25%", 0.50:"50%", 0.75:'75%', 1:'100%'},
+                        value=1) ]) ]),
             # STATS GENERAL CADRE =============================================
             html.Div(className="cadre-left", children=[
                 html.Div(className="head-cadre", children=[
@@ -96,15 +97,13 @@ app.layout = html.Div(id="page", children=[
      Output('pos-graph', 'figure'),
      Output('dep-graph', 'figure')],
     [Input('upload-data', 'contents'),
-    Input('size-file', 'marks'),
     Input('size-file', 'value')])
-def update_data(content, marks, value):
+def update_data(content, value):
     if not content:
         return ["-", "-", "-", {}, {}]
     decoded = database.load(content)
-    size_file = float(marks[str(value)])
+    size_file = value
     dataset = database.create(decoded,size_file)
-    
     g_stats, pos_stats, dep_stats = database.stats(dataset)
     pos_graph = bar_graph(pos_stats, 'rgba(50, 171, 96, 0.6)')
     dep_graph = bar_graph(dep_stats, '#95addd')
