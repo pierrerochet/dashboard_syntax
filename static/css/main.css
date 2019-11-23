@@ -92,6 +92,12 @@ text-align:center;
 margin-top:20px;
 }
 
+.statistic-cadre{
+display:inline-block;
+width:65%;
+margin-left:30px;
+}
+
 .head-cadre {
 width:100%;
 height:40px;
