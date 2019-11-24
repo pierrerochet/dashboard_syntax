@@ -6,11 +6,10 @@ Created on Thu Nov 14 10:11:16 2019
 @author: rochet
 """
 
-
 def bar_graph(data, bar_color):
     return {
         'data': [
-            {'y': [k for k, _ in sorted(zip(data.values(), data.keys()), reverse=True)],
+            {'y': [sum(k) for k, _ in sorted(zip(data.values(), data.keys()), reverse=True)],
              'x': [v for _, v in sorted(zip(data.values(), data.keys()), reverse=True)],
              'type': 'bar',
              'textposition': "outside",

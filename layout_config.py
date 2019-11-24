@@ -33,7 +33,7 @@ def config():
                                            'weigth': '100%'
                                        })]),
                         html.Label('Select size'),
-                        dcc.RangeSlider(id="size-file",
+                        dcc.RangeSlider(id="size_file",
                                         min=0,
                                         max=1,
                                         step=0.25,
@@ -47,7 +47,21 @@ def config():
                         html.P('General Statistics')]),
                     html.Div(className="content-cadre", children=[
                         html.Div([], style={'width': '100%'})]),
-                    html.P(children=['Peut-etre autre chose à ajouter']),
+                    dcc.Dropdown(id="statistic_pos_tag",
+                                 value="",
+                                 multi=False,
+                                 ),
+
+                    dcc.RadioItems(id="type_calcul_statistic",
+                                   options=[
+                                       {'label': 'Moyenne', 'value': 'moyenne'},
+                                       {'label': 'Ecart-Type', 'value': 'ecart_type'}
+
+                                   ],
+                                   value='',
+                                   labelStyle={'display': 'inline-block'}
+                                   ),
+                    html.P(id="resultat_stats")
 
                 ])]),
 
@@ -88,28 +102,6 @@ def config():
                                         id='dep-graph',
                                         figure={})])])])]),
 
-                    # STATISTIC ZONE ==================================================
-
-                    html.Div(className="statistic-cadre", children=[
-                        html.Div(className="head-cadre", children=[
-                            html.P('General Statistics')]),
-                        html.Div(className="content-cadre", children=[
-                            html.Div([], style={'width': '100%'})]),
-                        html.P(children=['Choisir un ou plusieurs POS-tag et calculez :) : ']),
-                        dcc.Dropdown(id="statistic",
-
-                            multi=True,
-                            ),
-
-                        dcc.RadioItems(id="type_statistic",
-                            options=[
-                                {'label': 'Moyenne', 'value': 'moyenne'},
-                                {'label': 'Ecart-Type', 'value': 'ecart_type'}
-
-                            ],
-                            value='moyenne',
-                            labelStyle={'display': 'inline-block'}
-                        )
-                    ])])])])])
+                    ])])])])
 ##
     return app, app.layout

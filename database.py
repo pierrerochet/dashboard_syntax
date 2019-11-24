@@ -4,6 +4,8 @@
 import numpy as np
 import base64
 
+import statistic
+
 
 def load(file):
     _, content_string = file.split(',')
@@ -65,31 +67,3 @@ def pos_tag_extraction(data):
     return resultat
 
 
-def stats(database_sized):
-    pos_stats = {}
-    dep_stats = {}
-    total_sentence = 0
-    pos_tag = {}
-    seq_num_token = []
-    seq_token = []
-
-    for seq in database_sized:
-        total_sentence += 1
-        seq_num_token.append(seq["size"])
-        seq_token += seq["form"]
-        for pos in seq["pos"]:
-            pos_stats[pos] = pos_stats.get(pos, 0) + 1
-            pos_tag.setdefault(pos, pos)
-        for dep in seq["dep"]:
-            dep_stats[dep] = dep_stats.get(dep, 0) + 1
-
-    pos_tag_list = pos_tag_extraction(pos_tag)
-    diversity_token = len(set(seq_token))
-    total_token = sum(seq_num_token)
-    mean_token = np.mean(np.array(seq_num_token))
-    std_token = np.std(np.array(seq_num_token))
-    std_token = "{:.2f}".format(std_token)
-
-    g_stats = {"total": total_token, "diversity": diversity_token, "mean": mean_token, "std": std_token,
-               "sentence": total_sentence}
-    return g_stats, pos_stats, dep_stats, pos_tag_list
