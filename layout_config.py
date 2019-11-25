@@ -1,10 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
+
 def config():
-    external_stylesheets = ["static/css/main.css"]
-    app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+    app = dash.Dash(__name__)
     app.layout = html.Div(id="page", children=[
         # HEADER ==================================================================
         html.Header(
@@ -41,7 +44,7 @@ def config():
                                         marks={0: "0", 0.25: "25%", 0.50: "50%", 0.75: '75%', 1: '100%'},
                                         allowCross=False)])]),
 
-                # STATS GENERAL CADRE =============================================
+                # STATS GENERAL CADRE ============================================
                 html.Div(className="cadre-left", children=[
                     html.Div(className="head-cadre", children=[
                         html.P('General Statistics')]),
@@ -51,20 +54,18 @@ def config():
                                  value="",
                                  multi=False,
                                  ),
-
                     dcc.RadioItems(id="type_calcul_statistic",
                                    options=[
                                        {'label': 'Moyenne', 'value': 'moyenne'},
-                                       {'label': 'Ecart-Type', 'value': 'ecart_type'}
-
+                                       {'label': 'Ecart-Type', 'value': 'ecart_type'},
+                                       {'label': "Variance", "value": "variance"}
                                    ],
                                    value='',
                                    labelStyle={'display': 'inline-block'}
                                    ),
-                    html.P(id="resultat_stats")
+                        html.P(id="resultat_stats")
 
-                ])]),
-
+                            ])]),
 
             # MIDDLE FRAME ========================================================
             html.Div([
@@ -84,8 +85,6 @@ def config():
                                 html.Div(html.H4("Sentences")),
                                 html.Div(className="number-cadre", id="nb_sentence")])])]),
 
-
-
                     # GRAPH ZONE ==================================================
                     html.Div(className="graph-frame", children=[
                         dcc.Tabs(id="tabs", children=[
@@ -102,6 +101,8 @@ def config():
                                         id='dep-graph',
                                         figure={})])])])]),
 
-                    ])])])])
-##
+                                    dcc.Graph(id="curve_graph",
+                                              figure={})
+                            ])])])])
+
     return app, app.layout

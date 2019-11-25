@@ -4,8 +4,6 @@
 import numpy as np
 import base64
 
-import statistic
-
 
 def load(file):
     _, content_string = file.split(',')
@@ -40,7 +38,7 @@ def create(content, start_percentage_size, end_percentage_size):
             database.append(save)
             save = {"form": [], "lemma": [], "pos": [], "dep": [], "size": 0, "phrase_id": count_phrase}
 
-    ## percentage's file ##
+    # percentage's file #
     database_sized = percentage_file(database, start_percentage_size, end_percentage_size, count_phrase)
 
     return database_sized
@@ -67,3 +65,48 @@ def pos_tag_extraction(data):
     return resultat
 
 
+def array_data(database_sized, pos_tag, dep_tag):
+    pos_stats = {}
+    dep_stats = {}
+
+    # array for pos_tag and dependencies
+    bags_deps = []
+    bag_deps = np.zeros(len(list(dep_tag.values())))
+
+    bags_pos_tag = []
+    bag_pos_tag = np.zeros(len(list(pos_tag.values())))
+
+    for seq in database_sized:
+        for i, word in enumerate(list(dep_tag.values())):
+            for dep in seq["dep"]:
+                if dep == word:
+                    bag_deps[i] += 1
+
+        bags_deps.append(bag_deps)
+        bag_deps = np.zeros(len(list(dep_tag.values())))
+
+        for i, word in enumerate(list(pos_tag.values())):
+            for pos in seq["pos"]:
+                if pos == word:
+                    bag_pos_tag[i] += 1
+
+        bags_pos_tag.append(bag_pos_tag)
+        bag_pos_tag = np.zeros(len(list(pos_tag.values())))
+
+    # creation dico for pos_stats and dep_stats from the arrays
+    etape_par_etape = []
+    for index, value in enumerate(pos_tag.values()):
+        for element in bags_pos_tag:
+            etape_par_etape.append(element[index])
+
+        pos_stats[value] = etape_par_etape
+        etape_par_etape = []
+
+    for index, value in enumerate(dep_tag.values()):
+        for element in bags_deps:
+            etape_par_etape.append(element[index])
+
+        dep_stats[value] = etape_par_etape
+        etape_par_etape = []
+
+    return pos_stats, dep_stats
