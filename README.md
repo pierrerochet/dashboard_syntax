@@ -1,7 +1,7 @@
 # Syntax dashboard
 
 Il s'agit d'une interface graphique donnant quelques statistiques simples sur un fichier conllu.
-Elles permet également de générer une table de relations entre dépendances.
+Elle permet également de générer une table de relations entre dépendances.
 Elle possède également un éditeur très basique pour modifier un ou plusieurs élements d'une phrase.
 L'intéret est de pouvoir envoyer les phrases selectionnées dans la table de relation directement dans l'éditeur. Ceci afin de faciliter la correction des potentielles erreurs détectées. 
 
