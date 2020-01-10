@@ -57,7 +57,6 @@ class Treebank:
                     head = 'ROOT'
                 else:
                     head = getattr(t.nodes[int(n.head) - 1], attr)
-                # upgrade self.form_clus
                 ind = 0
                 upgrade = False
                 for dict_rel in self.rel_clus[attr]:
