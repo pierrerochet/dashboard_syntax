@@ -7,21 +7,16 @@ Created on Thu Nov 14 10:11:16 2019
 """
 
 def bar_graph(data, bar_color):
-    return {
-                'data': [
-                     {'y': [k for k, _ in sorted(zip(data.values(), data.keys()), reverse=True)],
-                    'x': [v for _, v in sorted(zip(data.values(), data.keys()), reverse=True)],
+    data_sorted = sorted(zip(data.values(), data.keys()), reverse=True)
+    return {'data': [
+                     {'y': [k for k, _ in data_sorted],
+                    'x': [v for _, v in data_sorted],
                     'type': 'bar',
                     'textposition':"outside",
                     'marker':{
-                            'color':'rgba(50, 171, 96, 0.6)',
+                            'color': bar_color,
                             'line':{
                                 'color':'rgba(50, 171, 96, 1.0)',
-                                'width':'1'},
-                        },
-                    'orientation':'v'}
-                ],
-                'layout': {
-                    'text': 'percent'
-                }
-            }
+                                'width':'1'} },
+                    'orientation':'v'} ],
+            'layout': { 'text': 'percent' } }

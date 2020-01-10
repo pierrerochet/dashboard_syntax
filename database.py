@@ -1,58 +1,196 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Nov 14 10:10:55 2019
 
-@author: rochet
-"""
-import numpy as np
+
 import base64
-
-def load(file):
-    _ , content_string = file.split(',')
-    decoded = base64.b64decode(content_string)
-    return decoded.decode("UTF8")
-
-def create(content):
-    database = []
-    save = {"form":[], "lemma":[], "pos":[], "dep":[], "size":0}
-    input_file = content.split("\n")
-    for l in input_file:
-        if l !="":
-            if "# sent_id" in l: save['sent_id'] = l[12:]
-            elif "# text" in l: save['text'] = l[9:]
-            else:
-                elements = l.split('\t')
-                save['form'].append(elements[1])
-                save['lemma'].append(elements[2])
-                save['pos'].append(elements[3])
-                save['dep'].append(elements[7])
-                save['size'] += 1
-        else:
-            database.append(save)
-            save = {"form":[], "lemma":[], "pos":[], "dep":[], "size":0}
-    return database
+import re
+import numpy as np
 
 
-def stats(database):
-    pos_stats = {}
-    dep_stats = {}
-    total_sentence = 0
-    seq_num_token = []
-    seq_token = []
-    for seq in database:
-        total_sentence += 1
-        seq_num_token.append(seq["size"])
-        seq_token += seq["form"]
-        for pos in seq["pos"]:
-            pos_stats[pos] = pos_stats.get(pos, 0) + 1
-        for dep in seq["dep"]:
-            dep_stats[dep] = dep_stats.get(dep, 0) + 1
-    diversity_token = len(set(seq_token))
-    total_token = sum(seq_num_token)
-    mean_token = np.mean(np.array(seq_num_token))
-    std_token = np.std(np.array(seq_num_token))
-    std_token = "{:.2f}".format(std_token)
-    g_stats = {"total":total_token,"diversity":diversity_token,"mean":mean_token,"std":std_token, "sentence":total_sentence }
+class Treebank:
+    '''Created a treebank object'''
 
-    return g_stats, pos_stats, dep_stats
+    def __init__(self, file, start_percentage_size, end_percentage_size):
+        # lexiques
+        self.lex_sent = []
+        self.lex_form = {}
+        self.lex_lemma = {}
+        self.lex_pos = {}
+        self.lex_dep = {}
+        # dependencies clusters
+        self.rel_clus = {'pos': [], 'form': []}
+        self.rel_index = {'pos': [], 'form': []}
+        # stats
+        self.sum_trees = 0
+        self.mean_trees = 0
+        self.std_trees = 0
+        self.sum_nodes = 0
+        # content
+        self.trees = []
+        self.pos_tag_dict = {}
+        self.bags_pos_tag = []
+        self.list_of_bags_pos_tag = []
+        self.dict_for_stats = {}
+
+        def load(file):
+            _, content_string = file.split(',')
+            decoded = base64.b64decode(content_string)
+            return decoded.decode('UTF8')
+
+        def split_treebank(content_file, start_percentage_size, end_percentage_size):
+            trees = re.split('\n{2,}', content_file)
+
+            # corpus size
+            start_percentage_size *= len(trees)
+            end_percentage_size *= len(trees)
+            trees_sized = trees[int(start_percentage_size):int(end_percentage_size)]
+
+            return trees_sized
+
+        # processing and getting data file
+        def update_rel_clus(t, i, attr):
+            for n in t.nodes:
+                self.pos_tag_dict[n.pos] = n.pos
+                node = getattr(n, attr)
+                dep = n.dep
+                if n.head == 0:
+                    head = 'ROOT'
+                else:
+                    head = getattr(t.nodes[int(n.head) - 1], attr)
+                # upgrade self.form_clus
+                ind = 0
+                upgrade = False
+                for dict_rel in self.rel_clus[attr]:
+                    if dict_rel['node'] == node and dict_rel['head'] == head:
+                        dict_rel[dep] = dict_rel.get(dep, 0) + 1
+                        merge_index = self.rel_index[attr][ind].get(dep, []) + [i]
+                        self.rel_index[attr][ind][dep] = merge_index
+                        upgrade = True
+                        break
+                    ind += 1
+                if upgrade is False:
+                    init_dict_rel = {'node': node, 'head': head, dep: 1}
+                    init_dict_index = {'node': node, 'head': head, dep: [i]}
+                    self.rel_clus[attr].append(init_dict_rel)
+                    self.rel_index[attr].append(init_dict_index)
+
+        # to statistic processing. Get a bag of words with the number tag for each
+        def array(self, trees_string):
+            # stats bag of words
+            bag_pos_tag = np.zeros(len(list(self.lex_pos.keys())))
+
+            for i in range(len(trees_string)):
+                if trees_string[i] != '':
+                    t = Tree(trees_string[i])
+
+                    for n in t.nodes:
+                        for ind, item in enumerate(list(self.lex_pos.keys())):
+                            if item == n.pos:
+                                bag_pos_tag[ind] += 1
+
+                self.bags_pos_tag.append(bag_pos_tag)
+                bag_pos_tag = np.zeros(len(list(self.lex_pos.keys())))
+
+            for index, value in enumerate(self.lex_pos.keys()):
+                for item in self.bags_pos_tag:
+                    self.list_of_bags_pos_tag.append(item[index])
+
+                self.dict_for_stats[value] = self.list_of_bags_pos_tag
+                self.list_of_bags_pos_tag = []
+
+            return self.dict_for_stats
+
+        treebank_string = load(file)
+        trees_string = split_treebank(treebank_string, start_percentage_size, end_percentage_size)
+
+        for i in range(len(trees_string)):
+
+            if trees_string[i] != '':
+                t = Tree(trees_string[i])
+                self.lex_sent.append(t.sent)
+                self.sum_trees += 1
+                self.trees.append(t)
+                update_rel_clus(t, i, 'pos')
+
+                for n in t.nodes:
+                    self.sum_nodes += 1
+                    self.lex_form[n.form] = self.lex_form.get(n.form, 0) + 1
+                    self.lex_lemma[n.lemma] = self.lex_lemma.get(n.lemma, 0) + 1
+                    self.lex_pos[n.pos] = self.lex_pos.get(n.pos, 0) + 1
+                    self.lex_dep[n.dep] = self.lex_dep.get(n.dep, 0) + 1
+
+        self.dict_for_stats = array(self, trees_string)
+        sizes = np.array([tree.sum for tree in self.trees])
+        self.mean_trees = np.mean(sizes)
+        self.std_trees = np.std(sizes)
+
+    def export_trees_to_text(self):
+        '''Export a new conll file'''
+        text = ''
+        for t in self.trees:
+            text += t.to_text() + '\n'
+        return text
+
+
+class Tree:
+    '''Created a tree object'''
+
+    def __init__(self, tree_format):
+        self.sent = ''
+        self.nodes = []
+        self.sum = 0
+        nodes = tree_format.split('\n')
+        for i in range(len(nodes)):
+            n = nodes[i]
+            if '# sent_id' not in n and '# text' not in n:
+                index, form, lemma, pos, _, _, head, dep, _, _ = n.split('\t')
+                self.sent += f'{form} '
+                if '-' not in index:  # for multiple index (du, des, lesquels, etc)
+                    self.nodes.append(Node(index, form, lemma, pos, head, dep))
+                    self.sum += 1
+
+    def edit(self, nodes_list):
+        '''Edit the node list of tree'''
+        nodes = []
+        for e in nodes_list:
+            n = Node(e['index'],
+                     e['form'],
+                     e['lemma'],
+                     e['pos'],
+                     e['head'],
+                     e['dep'])
+            nodes.append(n)
+        self.nodes = nodes
+
+    def to_list(self):
+        '''Return the nodes tree in list of dictionnary'''
+        nodes_list = []
+        for n in self.nodes:
+            node_dict = {}
+            node_dict['index'] = n.index
+            node_dict['form'] = n.form
+            node_dict['lemma'] = n.lemma
+            node_dict['pos'] = n.pos
+            node_dict['dep'] = n.dep
+            node_dict['head'] = n.head
+            nodes_list.append(node_dict)
+        return nodes_list
+
+    def to_text(self):
+        '''return the tree in text form'''
+        text = ''
+        for n in self.nodes:
+            text += f'{n.index}\t{n.form}\t{n.lemma}\t{n.pos}\t{n.dep}\t{n.head}\n'
+        return text
+
+
+class Node:
+    '''Created a node object'''
+
+    def __init__(self, index, form, lemma, pos, head, dep):
+        self.index = index
+        self.form = form
+        self.lemma = lemma
+        self.pos = pos
+        self.dep = dep
+        self.head = head
