@@ -28,14 +28,14 @@ Ex:
 
 ![](https://s5.gifyu.com/images/ezgif.com-video-to-gif9b6c72424b5a27fe.gif)
 
-## 2. Choissir la taille du corpus
+## 2. Choisir la taille du corpus
 
-L'utilisateur peut changer la taille du corpus
+Vous pouvez changer la taille du corpus grâce à la barre de selection présente dans la partie 
 *Attention! A chaque modification, tous les calculs sont réeffectués*.
 
 Ex:
 
-On peut selectionner 50% du corpus ou seulement sont troisème quart : de 50% à 75%.
+On peut selectionner 50% du corpus ou seulement son troisème quart : de 50% à 75%.
 
 ![](https://s5.gifyu.com/images/taille_corpus.gif)
 
@@ -54,9 +54,9 @@ Ex :
 
 ![](https://s5.gifyu.com/images/generate_tableau.gif)
 
-## 5. Visualisation des phrases obtenues par la table des relations
+## 5. Visualiser des phrases obtenues par la table des relations
 
-Pour afficher les phrases contenant une relation, il vous suffit simplement de cliquer sur une des cellules du tableau.
+Pour afficher les phrases contenant une relation, il vous suffit de cliquer sur une des cellules du tableau.
 
 Ex : 
 
@@ -81,7 +81,7 @@ Ex :
 
 ## 6. Exporter et télécharger un nouveau fichier CoNNL avec les modification
 
-Allez dans la partie "**Export a new conll file**", entrez le nom de fichier souhaité puis cliquer sur exporter.
+Allez dans la partie "**Export a new conll file**", entrez le nom de fichier souhaité puis cliquez sur exporter.
 Vous pouvez télécharger en cliquant sur lien généré.
 
 ## Contact
