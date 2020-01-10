@@ -143,13 +143,21 @@ def load_list_tree(data_timestamp, active_cell, data):
 
 # callback pour afficher le tree
 @app.callback(
-    Output('frame-tree', 'children'),
+    [Output('frame-tree', 'children'),
+    Output('save-tree-button', 'n_clicks')],
     [Input('loading-tree', 'value')])
 def loading_table_tree(value_sent):
     # value_sent fait référence à la phrase choisie sur le tableau de phrases
     # une condition pour faire disparaitre le tableau à chaque upload.
+
+    # À chaque fois qu'on fait des modifications sur un arbre et ensuite on l'enregistre, sur notre tableau ça s'affiche "saved"
+    # Après si on change la phrase, on met le compteur à zéro pour que le message "saved" disparait.
+    global count_saved_tree
+    count_saved_tree = 0
+
     if value_sent is None:
-        return empty("table-tree")
+
+        return empty("table-tree"), count_saved_tree
 
     elif value_sent != None:
         columns_table = [{'id': 'index', 'name': 'index'},
@@ -164,7 +172,7 @@ def loading_table_tree(value_sent):
 
                 data_dropdown = {'pos': {'options': [{'label': pos, 'value': pos} for pos in sorted(tb.lex_pos)]},
                          'dep': {'options': [{'label': dep, 'value': dep} for dep in sorted(tb.lex_dep)]}}
-                return quick_edit_table(data_table, columns_table, data_dropdown)
+                return quick_edit_table(data_table, columns_table, data_dropdown), count_saved_tree
 
 
 @app.callback(
