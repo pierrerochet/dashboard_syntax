@@ -63,14 +63,14 @@ Ex :
 
 ## 5. Modifier les arbres
 
-La partie "**Quick edit tree**" contient une liste déroulante des phrases contennues dans le fichier importé.
+La partie "**Quick edit tree**" contient une liste déroulante des phrases contenues dans le fichier importé.
 Choississez une de ces phrases pour observer et modifier ses noeuds.
 Vous pouvez également envoyer n'importe quelle phrase obtenue par la table de relation dans l'éditeur en cliquant dessus.
 
 Utilisation de l'éditeur :
 * Modifier le contenu d'une cellule : Selectionner la celluler sur la cellule et modifier son contenu
 * Réinitialiser un arbre : cliquer sur "**Reset**"
-* Ajouter un noeud : Entrez l'index du node puis cliquez sur "**Ade node**"
+* Ajouter un noeud : Entrez l'index du node puis cliquez sur "**Add node**"
 * Enregistrer les modifications : Cliquer sur "**Save tree**"
 *Attention : N'oubliez pas d'enregistrer vos midifications avant de changer d'arbre ou d'exporter les résultats*
 
