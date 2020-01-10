@@ -20,7 +20,7 @@ python3 run.py
 
 # Guide d'utilisation
 
-## Importer un fichier
+## 1. Importer un fichier
 
 Le système prend en charge un fichier au format **CoNNL** *parfaitement formé*.
 
@@ -28,9 +28,9 @@ Ex:
 
 ![](https://s5.gifyu.com/images/ezgif.com-video-to-gif9b6c72424b5a27fe.gif)
 
-## Choisir la taille du corpus
+## 2. Choissir la taille du corpus
 
-L'utilisateur peut changer la taille du corpus.
+L'utilisateur peut changer la taille du corpus
 *Attention! A chaque modification, tous les calculs sont réeffectués*.
 
 Ex:
@@ -39,14 +39,14 @@ On peut selectionner 50% du corpus ou seulement sont troisème quart : de 50% à
 
 ![](https://s5.gifyu.com/images/taille_corpus.gif)
 
-## Graphres
+## 3. Visualiser les statistiques
 
 Après l'upload du fichier, des statistiques simples sur les **POS Tag** et **Dependances** sont calculés automatiquement.
 
 ![](https://s5.gifyu.com/images/graph1e4342c25077602e.gif)
 
 
-## Géneration du tableau des phrases
+## 4. Génerer la table des relations
 
 Vous pouvez générer une table des relations très facilement grâce au bouton *Generate relation table* .
 
@@ -54,19 +54,19 @@ Ex :
 
 ![](https://s5.gifyu.com/images/generate_tableau.gif)
 
-## Visualisation des phrases obtenues par la table de relations
+## 5. Visualisation des phrases obtenues par la table des relations
 
-Vous afficher les phrases contenant une relation, il vous suffit simplement de cliquer sur une des cellules du tableau.
+Pour afficher les phrases contenant une relation, il vous suffit simplement de cliquer sur une des cellules du tableau.
 
 Ex : 
 
 ![](https://s5.gifyu.com/images/phrase5a7b91428611aa7e.gif)
 
-## Modifier les treebanks
+## 5. Modifier les arbres
 
 La partie "**Quick edit tree**" contient une liste déroulante des phrases contennues dans le fichier importé.
 Choississez une de ces phrases pour observer et modifier ses noeuds.
-Remarque : Vous pouvez également envoyer n'importe quelle phrase obtenue par la table de relation dans l'éditeur en cliquant dessus.
+Vous pouvez également envoyer n'importe quelle phrase obtenue par la table de relation dans l'éditeur en cliquant dessus.
 
 Utilisation de l'éditeur :
 * Modifier le contenu d'une cellule : Selectionner la celluler sur la cellule et modifier son contenu
@@ -79,7 +79,7 @@ Ex :
 
 ![](https://s5.gifyu.com/images/quick_edit.gif)
 
-## Exporter et télécharger un nouveau fichier CoNNL avec les modification
+## 6. Exporter et télécharger un nouveau fichier CoNNL avec les modification
 
 Allez dans la partie "**Export a new conll file**", entrez le nom de fichier souhaité puis cliquer sur exporter.
 Vous pouvez télécharger en cliquant sur lien généré.
