@@ -1,6 +1,5 @@
 # Syntax dashboard
 
-Projet fait dans le cadre du cours **Langages de script**
 Il s'agit d'une interface graphique donnant quelques statistiques simples sur un fichier conllu.
 Elles permet également de générer une table de relations entre dépendances.
 Elle possède également un éditeur très basique pour modifier un ou plusieurs élements d'une phrase.
