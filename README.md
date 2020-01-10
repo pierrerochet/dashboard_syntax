@@ -71,6 +71,7 @@ Utilisation de l'éditeur :
 * Modifier le contenu d'une cellule : Selectionner la celluler sur la cellule et modifier son contenu
 * Réinitialiser un arbre : cliquer sur "**Reset**"
 * Ajouter un noeud : Entrez l'index du node puis cliquez sur "**Add node**"
+* Supprimer un noeud
 * Enregistrer les modifications : Cliquer sur "**Save tree**"
 *Attention : N'oubliez pas d'enregistrer vos midifications avant de changer d'arbre ou d'exporter les résultats*
 
