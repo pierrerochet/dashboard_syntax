@@ -8,7 +8,7 @@ import dash
 from dash.dependencies import Input, Output, State
 import dash_html_components as html
 
-# internes packages
+# internal packages
 from graph import bar_graph
 from table import rel_table, list_table, quick_edit_table, empty
 from database import treebank
@@ -17,7 +17,7 @@ from statistic import mean, variance, std
 
 app, app_layout = config()
 
-# callback pour le fichier importé et ses données
+# update when upload file
 @app.callback(
     [Output('token_total', 'children'),
      Output('token_unique', 'children'),
@@ -34,20 +34,19 @@ app, app_layout = config()
      Input('button-generate-rel_table', 'n_clicks'),
      Input('type_calcul_statistic', 'value'),
      Input('statistic_pos_tag', 'value')
-     ]
-)
+     ])
 def update_data(contents, size_file, n_clicks, type_stats, statistic_values):
     if contents is None:
         return ['-', '-', '-', {}, {}, [],[],[],[],[]]
 
-    # taille du corpus
+    # corpus size
     start_percentage_size, end_percentage_size = size_file
 
-    # Notre treebank objet
+    # treebank object
     global tb
     tb = treebank(contents, start_percentage_size, end_percentage_size)
 
-    # Infos recupéréés par notre objet
+    # getting informations
     pos_stats = tb.lex_pos
     dep_stats = tb.lex_dep
     pos_graph = bar_graph(pos_stats, '#8f99ed')
@@ -57,25 +56,24 @@ def update_data(contents, size_file, n_clicks, type_stats, statistic_values):
     total_sentence = tb.sum_trees
     load_option = [{'label': s, 'value': s} for s in tb.lex_sent]
 
-    # pos_tag pour stats
+    # statistics pos tags
     pos_tag_list = [{'label': x, 'value': x} for x in tb.lex_pos.keys()]
     dict_stats = tb.dict_stats # on recupere un array pour pouvoir calculer facilement avec numpy
     result_stats = update_statistic(dict_stats,type_stats, statistic_values)
 
-    # pour faire disparaitre le tableau de relation à chaque upload
+    # clear relation table when upload file
     rel_t = generate_rel_table(n_clicks)
-
-    # pour faire disparaitre le tableau de phrase à chaque upload
+    #  clear sentence list when upload file
     active_cell_table_list = None
 
     return total_token, diversity_token, total_sentence, pos_graph, dep_graph, load_option, pos_tag_list, rel_t, active_cell_table_list, result_stats
 
-# fonction pour générer le tableau de relation
+# Generate relation table
 def generate_rel_table(n_clicks):
-    # pour voir si on clique sur upload data ou on change la taille du corpus
+    # check corpus size and upload corpus
     context = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
 
-    if context == "button-generate-rel_table":
+    if context == 'button-generate-rel_table':
         if n_clicks > 0:
 
             # relations table
@@ -86,27 +84,24 @@ def generate_rel_table(n_clicks):
             rel_t = rel_table(data, columns)
             return rel_t
 
-    elif context == "upload-data" or "size_file":
-        return empty("table-rel")
+    elif context == 'upload-data' or 'size_file':
+        return empty('table-rel')
 
 
-# pour mettre à jour le calcul statistique
+# to update statistic 
 def update_statistic(dict_stats,type_stats, statistic_values):
     try:
-        if type_stats == "moyenne":
-            return "Résultat : {:.2f}".format(mean(dict_stats, statistic_values))
-
-        elif type_stats == "variance":
-            return "Résultat : {:.2f}".format(variance(dict_stats, statistic_values))
-
-        elif type_stats == "ecart_type":
-            return "Résultat : {:.2f}".format(std(dict_stats, statistic_values))
-
+        if type_stats == 'moyenne':
+            return 'Résultat : {:.2f}'.format(mean(dict_stats, statistic_values))
+        elif type_stats == 'variance':
+            return 'Résultat : {:.2f}'.format(variance(dict_stats, statistic_values))
+        elif type_stats == 'ecart_type':
+            return 'Résultat : {:.2f}'.format(std(dict_stats, statistic_values))
     except KeyError:
         return None
 
 
-#callback pour visusalisation des phrases
+# visualization sentences
 @app.callback(
     [Output('frame-table-list', 'children'),
      Output('table-list','active_cell')],
@@ -114,11 +109,9 @@ def update_statistic(dict_stats,type_stats, statistic_values):
     [State('table-rel', 'active_cell'),
      State('table-rel', 'data')])
 def load_list_tree(data_timestamp, active_cell, data):
-
-    # active_cell fait référence "clique séléctionné" sur le tableau de relation.
-    # C'est une condition qu'on a mise pour faire disparaitre le tableau de phrases à chaque upload.
+    # clear sentences table
     if active_cell is None:
-        return empty("table-list"), None
+        return empty('table-list'), None
 
     elif active_cell != None:
         if active_cell['column_id'] in data[active_cell['row']]:
@@ -136,29 +129,23 @@ def load_list_tree(data_timestamp, active_cell, data):
                        {'id': 'sent', 'name': 'Sentences'}]
             data = [{'sent': list_sent[ind], 'ind': ind + 1} for ind in range(len(list_sent))]
             return list_table(data, columns), None
-
         else:
-            return empty("table-list"), None
+            return empty('table-list'), None
 
 
-# callback pour afficher le tree
+# display tree
 @app.callback(
     [Output('frame-tree', 'children'),
     Output('save-tree-button', 'n_clicks')],
     [Input('loading-tree', 'value')])
 def loading_table_tree(value_sent):
-    # value_sent fait référence à la phrase choisie sur le tableau de phrases
-    # une condition pour faire disparaitre le tableau à chaque upload.
 
-    # À chaque fois qu'on fait des modifications sur un arbre et ensuite on l'enregistre, sur notre tableau ça s'affiche "saved"
-    # Après si on change la phrase, on met le compteur à zéro pour que le message "saved" disparait.
+
     global count_saved_tree
     count_saved_tree = 0
-
     if value_sent is None:
-
-        return empty("table-tree"), count_saved_tree
-
+        return empty('table-tree'), count_saved_tree
+    
     elif value_sent != None:
         columns_table = [{'id': 'index', 'name': 'index'},
                          {'id': 'form', 'name': 'form'},
@@ -169,7 +156,6 @@ def loading_table_tree(value_sent):
         for t in tb.trees:
             if t.sent == value_sent:
                 data_table = t.to_list()
-
                 data_dropdown = {'pos': {'options': [{'label': pos, 'value': pos} for pos in sorted(tb.lex_pos)]},
                          'dep': {'options': [{'label': dep, 'value': dep} for dep in sorted(tb.lex_dep)]}}
                 return quick_edit_table(data_table, columns_table, data_dropdown), count_saved_tree
@@ -253,7 +239,7 @@ def download():
                          as_attachment=True)
         return file
     except:
-        return ""
+        return ''
 
 
 if __name__ == '__main__':

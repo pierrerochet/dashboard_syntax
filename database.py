@@ -7,7 +7,7 @@ import re
 import numpy as np
 
 
-class treebank:
+class Treebank:
     '''Created a treebank object'''
     def __init__(self, file,start_percentage_size, end_percentage_size):
         # lexiques
@@ -39,14 +39,14 @@ class treebank:
         def split_treebank(content_file, start_percentage_size, end_percentage_size):
             trees = re.split('\n{2,}', content_file)
 
-            # taille de corpus
+            # corpus size
             start_percentage_size *= len(trees)
             end_percentage_size *= len(trees)
             trees_sized = trees[int(start_percentage_size):int(end_percentage_size)]
 
             return trees_sized
-
-        # traitement et recuperation des données concernant notre fichier
+        
+        # processing and getting data file
         def update_rel_clus(t, i, attr):
             for n in t.nodes:
                 self.pos_tag_dict[n.pos] = n.pos
@@ -66,19 +66,20 @@ class treebank:
                         break
                     ind += 1
                 if upgrade == False:
-                    init_dict_rel = {'node':node, 'head':head, dep:1 }
-                    init_dict_index = {'node':node, 'head':head, dep:[i] }
+                    init_dict_rel = {'node':node, 'head':head, dep:1}
+                    init_dict_index = {'node':node, 'head':head, dep:[i]}
                     self.rel_clus[attr].append(init_dict_rel)
                     self.rel_index[attr].append(init_dict_index)
 
-        # pour le calcul statistique, on recupere un sac de mots qui nous dit chaque phrase contient combien de pos tag.
-        def array(self,trees_string):
-            # sac de mots pour stats
+
+        # to statistic processing. Get a bag of words with the number tag for each
+        def array(self, trees_string):
+            # stats bag of words
             bag_pos_tag = np.zeros(len(list(self.lex_pos.keys())))
 
             for i in range(len(trees_string)):
                 if trees_string[i] != '':
-                    t = tree(trees_string[i])
+                    t = Tree(trees_string[i])
 
                     for n in t.nodes:
                         for ind, element in enumerate(list(self.lex_pos.keys())):
@@ -96,15 +97,14 @@ class treebank:
                 self.etape_par_etape = []
 
             return self.dict_stats
-                    
-    
+
         treebank_string = load(file)
         trees_string = split_treebank(treebank_string, start_percentage_size, end_percentage_size)
 
         for i in range(len(trees_string)):
-
+            
             if trees_string[i] != '':
-                t = tree(trees_string[i])
+                t = Tree(trees_string[i])
                 self.lex_sent.append(t.sent)
                 self.sum_trees += 1
                 self.trees.append(t)
@@ -131,26 +131,27 @@ class treebank:
         return text
 
 
-class tree:
+class Tree:
     '''Created a tree object'''
     def __init__(self, tree_format):
         self.sent = ''
         self.nodes = []
         self.sum = 0
-        nodes = tree_format.split("\n")
+        nodes = tree_format.split('\n')
         for i in range(len(nodes)):
             n = nodes[i]
             if '# sent_id' not in n and '# text' not in n:
                 index, form, lemma, pos, _, _, head, dep, _, _  = n.split('\t')
                 self.sent += f'{form} ' 
-                if "-" not in index: # for multiple index (du, des, lesquels, etc) 
-                    self.nodes.append(node(index, form, lemma, pos, head, dep))
+                if '-' not in index: # for multiple index (du, des, lesquels, etc) 
+                    self.nodes.append(Node(index, form, lemma, pos, head, dep))
                     self.sum += 1
     
     def edit(self, nodes_list):
+        '''Edit the node list of tree'''
         nodes = []
         for e in nodes_list:
-            n = node(e['index'],
+            n = Node(e['index'],
                      e['form'],
                      e['lemma'],
                      e['pos'],
@@ -181,7 +182,7 @@ class tree:
         return text
 
 
-class node:
+class Node:
     '''Created a node object'''
     def __init__(self, index, form, lemma, pos, head, dep):
         self.index = index
@@ -190,18 +191,3 @@ class node:
         self.pos = pos
         self.dep = dep
         self.head = head
-
-
-        
-    
-        
-    
-
-
-
-
-      
-    
-
-
-

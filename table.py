@@ -5,12 +5,12 @@
 import dash_table
 
 
-# pour afficher un tableau vide (on va l'utiliser pour nettoyer les tableaux à chaque upload)
+# generate a empty table
 def empty(value):
     return dash_table.DataTable(id=value)
 
 
-# table relation
+# generate a relation table
 def rel_table(data_table, columns_table):
      return dash_table.DataTable(
                                 id='table-rel',
@@ -22,8 +22,6 @@ def rel_table(data_table, columns_table):
                                  style_table={'width': '100%',
                                             'minWidth': '100%'
                                               },
-
-
                                 fixed_rows={'headers': True, 'data': 0 },
                                 fixed_columns={'headers': True, 'data': 2},
                                 style_data_conditional=[
@@ -42,7 +40,7 @@ def rel_table(data_table, columns_table):
                                 data=data_table)
 
 
-# table phrase
+# generate a sentence list table
 def list_table(data_table, columns_table):
      return dash_table.DataTable(id='table-list',
                                  style_header={'backgroundColor': 'rgb(230, 230, 230)',

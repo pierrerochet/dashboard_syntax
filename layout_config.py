@@ -6,25 +6,24 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 def config():
-
     app = dash.Dash(__name__, suppress_callback_exceptions=True)
 
-    app.layout = html.Div(id="page", children=[
+    app.layout = html.Div(id='page', children=[
         dcc.Location(id='url', refresh=True),
         # HEADER ==================================================================
         html.Header(
             children=[html.Div([
-                html.H2("Syntax Statistics"),
-                html.P(id="text-usage", children="dashboard for conll format")
+                html.H2('Syntax Statistics'),
+                html.P(id='text-usage', children='dashboard for conll format')
             ])]),
         # BODY ====================================================================
-        html.Div(id="body", children=[
+        html.Div(id='body', children=[
             html.Div(className='large-frame', children=[
                 # LEFT COLUMN =====================================================
-                html.Div(className="column-left", children=[
+                html.Div(className='column-left', children=[
                     # CONFIG CADRE ================================================
-                    html.Div(className="config", children=[
-                        html.Div(className="cadre-config", children=[
+                    html.Div(className='config', children=[
+                        html.Div(className='cadre-config', children=[
                             html.P(children=['Select conll file']),
                             html.Hr(className='hr'),
                             html.Div(className='load-file', children=[
@@ -40,66 +39,60 @@ def config():
                                            },
                                            multiple=None)]),
                             html.Label('Select size'),
-                            dcc.RangeSlider(id="size_file",
+                            dcc.RangeSlider(id='size_file',
                                             min=0,
                                             max=1,
                                             step=0.25,
                                             value=[0, 1],
-                                            marks={0: "0", 0.25: "25%", 0.50: "50%", 0.75: '75%', 1: '100%'},
+                                            marks={0: '0', 0.25: '25%', 0.50: '50%', 0.75: '75%', 1: '100%'},
                                             allowCross=False)])]),
                     # STATS GENERAL CADRE =========================================
-                    html.Div(className="cadre-left", children=[
-                        html.Div(className="head-cadre", children=[
+                    html.Div(className='cadre-left', children=[
+                        html.Div(className='head-cadre', children=[
                             html.P('General Statistics')]),
                         html.Br(),
-                        html.Div(className="content-cadre", children=[
-
-                            dcc.Dropdown(id="statistic_pos_tag",
-                                         value="",
+                        html.Div(className='content-cadre', children=[
+                            dcc.Dropdown(id='statistic_pos_tag',
+                                         value='',
                                          multi=False,
-                                         placeholder="Choisir un POS tag",
+                                         placeholder='Choisir un POS tag',
                                          disabled=False,
-                                         persistence=False
-
-                                         ),
-                            dcc.RadioItems(id="type_calcul_statistic",
+                                         persistence=False ),
+                            dcc.RadioItems(id='type_calcul_statistic',
                                            options=[
                                                {'label': 'Moyenne', 'value': 'moyenne'},
                                                {'label': 'Ecart-Type', 'value': 'ecart_type'},
-                                               {'label': "Variance", "value": "variance"}
-                                           ],
+                                               {'label': 'Variance', 'value': 'variance'}],
                                            value='',
-                                           labelStyle={'display': 'inline-block'}
-                                           ),
+                                           labelStyle={'display': 'inline-block'}),
                             html.Br(),
-                            html.P(id="resultat_stats", children=[]),
+                            html.P(id='resultat_stats', children=[]),
                         ])]),
                 ]),
-
                 # MIDDLE FRAME ====================================================
                 html.Div([
-                    html.Div(className="mid-frame", children=[
+                    html.Div(className='mid-frame', children=[
                         # FIRST HORIZONTAL FRAME ==================================
-                        html.Div(className="large-hor-frame", children=[
-                            html.Div(className="small-frame", children=[
-                                html.Div(className="basic-cadre", children=[
-                                    html.Div(html.H4("Tokens")),
+                        html.Div(className='large-hor-frame', children=[
+                            html.Div(className='small-frame', children=[
+                                html.Div(className='basic-cadre', children=[
+                                    html.Div(html.H4('Tokens')),
                                     dcc.Loading(type='dot', children=[
-                                        html.Div(className="number-cadre", id="token_total")])])]),
-                            html.Div(className="small-frame-mid", children=[
-                                html.Div(className="basic-cadre", children=[
-                                    html.Div(html.H4("Unique Tokens")),
+                                        html.Div(className='number-cadre', id='token_total')])])]),
+                            html.Div(className='small-frame-mid', children=[
+                                html.Div(className='basic-cadre', children=[
+                                    html.Div(html.H4('Unique Tokens')),
                                     dcc.Loading(type='dot', children=[
-                                        html.Div(className="number-cadre", id="token_unique")])])]),
-                            html.Div(className="small-frame", children=[
-                                html.Div(className="basic-cadre", children=[
-                                    html.Div(html.H4("Sentences")),
+                                        html.Div(className='number-cadre', id='token_unique')])])]),
+                            html.Div(className='small-frame', children=[
+                                html.Div(className='basic-cadre', children=[
+                                    html.Div(html.H4('Sentences')),
                                     dcc.Loading(type='dot', children=[
-                                        html.Div(className="number-cadre", id="nb_sentence")])])])]),
+                                        html.Div(className='number-cadre', id='nb_sentence')])])])]),
 
                         # GRAPH ZONE ==============================================
-                        html.Div(className="graph-frame", children=[
-                            dcc.Tabs(id="tabs", children=[
+                        html.Div(className='graph-frame', children=[
+                            dcc.Tabs(id='tabs', children=[
                                 # GRAPH 1 : pos disparity =========================
                                 dcc.Tab(label='POS disparity', children=[
                                     html.Div([
@@ -112,9 +105,7 @@ def config():
                                         dcc.Graph(
                                             id='dep-graph',
                                             figure={})])])])])])])]),
-
             html.Div([
-
                 # RELATION TABLE ZONE ===============================================
                 html.Div(className='large-box', children=[
                     html.Div(className='head-large-box', children=[
@@ -124,7 +115,7 @@ def config():
                     # TABLE : specificity
                     html.Div(className='content-box', children=[
                         dcc.Loading(type='dot', children=[
-                            html.Div(id="frame-table-rel", children=[])])])]),
+                            html.Div(id='frame-table-rel', children=[])])])]),
 
                 # TABLE PHRASE ZONE ===============================================
                 html.Div(className='large-box', children=[
@@ -137,7 +128,7 @@ def config():
                         dcc.Loading(type='dot', children=[
                             html.Div(id='frame-table-list',children=[])
                         ])])]),
-                # QUICK EDIT TREE ZONE ================================================
+                # QUICK EDIT TREE ZONE =============================================
                 html.Div(id='quick-edit-frame', className='large-box', children=[
                     html.Div(className='head-large-box', children=[
                         html.H3('Quick Edit Tree')
@@ -146,7 +137,7 @@ def config():
                         html.Div(id='head-quick-edit', children=[
                             dcc.Dropdown(id='loading-tree', options=[],
                                          optionHeight=80,
-                                         placeholder="Select a sentence"),
+                                         placeholder='Select a sentence'),
                             html.Div(id='quick-edit-function', children=[
                                 html.Button('Reset', id='reset-button', n_clicks=0),
                                 html.Button('Add node :', id='editing-rows-button', n_clicks=0),
@@ -158,10 +149,10 @@ def config():
 
                         # edit table
                         dcc.Loading(type='dot', children=[
-                            html.Div(id="frame-tree", className='large-frame',
+                            html.Div(id='frame-tree', className='large-frame',
                                      style={'heigth': '100%', 'width': '500px'},
                                      children=[])])])]),
-                # EXPORT ZONE =========================================================
+                # EXPORT ZONE =======================================================
                 html.Div(id='export-frame', className='large-box', children=[
                     html.H3('Export a new conllu file'),
                     dcc.Input(id='input-name', type='text',
@@ -170,15 +161,8 @@ def config():
                     html.Button('Export', id='button-export'),
                     html.Div(id='frame-export-link')
                 ])
-
-
-
-
-
-
             ])])
             ])
-
 
     return app, app.layout
 

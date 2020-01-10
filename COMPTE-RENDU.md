@@ -35,4 +35,3 @@ Quelques mots sur ce qu'on a pu obtenir :
 Le programme fonctionne sans problème. Cependant, nous avons eu un problème et nous n'avons pas eu le temps de le résoudre. Quand on généralise un tableau avec les phrases du fichier **CoNLL**, le système marche "un petit peu" lentement.
 
 Nous aurions donc aimé améliorer ce point-là.
-
