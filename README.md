@@ -78,7 +78,7 @@ Ex :
 
 ![](https://s5.gifyu.com/images/quick_edit.gif)
 
-## 6. Exporter et télécharger un nouveau fichier CoNNL avec les modification
+## 6. Exporter et télécharger un nouveau fichier CoNNL avec les modifications
 
 Allez dans la partie "**Export a new conll file**", entrez le nom de fichier souhaité puis cliquez sur exporter.
 Vous pouvez télécharger en cliquant sur lien généré.
